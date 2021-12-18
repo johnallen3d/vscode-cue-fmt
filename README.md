@@ -7,7 +7,9 @@ Format CUE files using `cue fmt`.
 CUE must be installed and `cue` must be on the users `$PATH`.
 
 ```sh
-brew install cue
+# MacOS
+brew install cue-lang/tap/cue
+# more info: https://cuelang.org/docs/install/
 ```
 
 Enable "format on save" VS Code setting.
@@ -24,3 +26,4 @@ I've grown accustomed to the format on save feature that's enabled by default wi
 ## Status
 
 **Alpha** -- I've never written TypeScript let alone a VS Code extension. The code in this extension is _extremely_ niave and has little to no error handling. Use at your own risk.
+
