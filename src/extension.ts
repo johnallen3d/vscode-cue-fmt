@@ -1,4 +1,5 @@
-import { languages, Range, TextDocument, TextEdit } from 'vscode';
+'use strict';
+import { languages, Range, TextDocument, TextEdit, window } from 'vscode';
 import { spawnSync } from 'child_process';
 import { join, basename } from 'path';
 import { randomBytes } from 'crypto';
@@ -7,17 +8,22 @@ import { readFileSync, writeFileSync } from 'fs';
 
 function provideDocumentFormattingEdits(document: TextDocument): TextEdit[] {
   const dir = tmpdir();
-  const currentFileName = basename(document.fileName);
   const random = randomBytes(16).toString('hex');
-  const tmpfileName = `vscode-cue-fmt-${random}-${currentFileName}`;
-  const tmpfile = join(dir, tmpfileName);
+  const tmpfilePrefix = join(dir, `vscode-cue-fmt-${random}-`);
+  const tmpfile = `${tmpfilePrefix}${basename(document.fileName)}`;
 
   // copy current contents to a tempfile
   writeFileSync(tmpfile, document.getText());
 
   // run `cue fmt` on temp file
-  // TODO: handle errror/stderr, report to user
   const fmt = spawnSync("cue", ["fmt", tmpfile], {});
+
+  if (fmt.stdout) {
+    const error = fmt.stderr.toString().replace(tmpfilePrefix, "");
+
+    // TODO: can we include carraige return in error message?
+    window.showErrorMessage(`Run \`cue fmt\` error: ${error}`);
+  }
 
   // read formatted file
   const formatted = readFileSync(tmpfile).toString();
