@@ -1,5 +1,6 @@
 {
   "name": "vscode-cue-fmt",
+  "publisher": "jallen7usa",
   "displayName": "vscode-cue-fmt",
   "description": "Add auto-formatting for CUE Lang files",
   "version": "0.0.1",
@@ -54,4 +55,3 @@
     "@vscode/test-electron": "^1.6.2"
   }
 }
-
