@@ -3,7 +3,7 @@
   "publisher": "jallen7usa",
   "displayName": "vscode-cue-fmt",
   "description": "Add auto-formatting for CUE Lang files",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/johnallen3d/vscode-cue-fmt",
   "icon": "cue-logo.png",
   "engines": {

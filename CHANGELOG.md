@@ -6,4 +6,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+## [0.0.1] - 2021-12-19
+
+- [af31f28](https://github.com/johnallen3d/vscode-cue-fmt/commit/af31f28): Fix functionality - [@johnallen3d](https://github.com/johnallen3d)
+
+## [0.0.1] - 2021-12-19
+
+- [bb18eab](https://github.com/johnallen3d/vscode-cue-fmt/commit/bb18eab): Initial release - [@johnallen3d](https://github.com/johnallen3d)
+
