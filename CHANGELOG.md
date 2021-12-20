@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- [3](https://github.com/johnallen3d/vscode-cue-fmt/pull/3): Report issues as VS Code "problems" - [@johnallen3d](https://github.com/johnallen3d)
+
 ## [0.0.3] - 2021-12-19
 
 - [3df1a01](https://github.com/johnallen3d/vscode-cue-fmt/commit/3df1a01): Show error message - [@johnallen3d](https://github.com/johnallen3d)

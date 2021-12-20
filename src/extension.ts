@@ -1,42 +1,94 @@
-'use strict';
-import { languages, Range, TextDocument, TextEdit, window } from 'vscode';
-import { spawnSync } from 'child_process';
-import { join, basename } from 'path';
-import { randomBytes } from 'crypto';
-import { tmpdir } from 'os';
-import { readFileSync, writeFileSync } from 'fs';
+"use strict";
+
+import {
+  Diagnostic,
+  DiagnosticCollection,
+  DiagnosticSeverity,
+  languages,
+  Position,
+  Range,
+  TextDocument,
+  TextEdit,
+  window,
+} from "vscode";
+
+import { spawnSync } from "child_process";
+import { join, basename } from "path";
+import { randomBytes } from "crypto";
+import { tmpdir } from "os";
+import { readFileSync, writeFileSync } from "fs";
+
+let diagnosticCollection: DiagnosticCollection;
 
 function provideDocumentFormattingEdits(document: TextDocument): TextEdit[] {
+  const range = document.validateRange(new Range(0, 0, Infinity, Infinity));
   const dir = tmpdir();
-  const random = randomBytes(16).toString('hex');
+  const random = randomBytes(16).toString("hex");
   const tmpfilePrefix = join(dir, `vscode-cue-fmt-${random}-`);
   const tmpfile = `${tmpfilePrefix}${basename(document.fileName)}`;
 
-  // copy current contents to a tempfile
+  // copy current contents to a temporary file
   writeFileSync(tmpfile, document.getText());
 
   // run `cue fmt` on temp file
   const fmt = spawnSync("cue", ["fmt", tmpfile], {});
 
-  if (fmt.stdout) {
-    const error = fmt.stderr.toString().replace(tmpfilePrefix, "");
-
-    // TODO: can we include carraige return in error message?
-    window.showErrorMessage(`Run \`cue fmt\` error: ${error}`);
-  }
+  // refresh diagnostics/problems
+  updateDiagnostics(document, fmt.stderr.toString(), tmpfilePrefix);
 
   // read formatted file
   const formatted = readFileSync(tmpfile).toString();
-
-  // create range representing the whole document to be replaced
-  const range = document.validateRange(new Range(0, 0, Infinity, Infinity));
 
   // write formatted CUE back to document
   return [new TextEdit(range, formatted)];
 }
 
+// show info in problem panel
+//
+// parsing errors from `cue fmt` formatted like this
+// ---
+// missing ',' before newline in list literal
+//     ./foo.cue:221:4
+// missing ',' in list literal:
+//     ./foo.cue:222:8
+function updateDiagnostics(
+  document: TextDocument,
+  errorMessage: string,
+  tmpfilePrefix: string
+): void {
+  const problems: Diagnostic[] = [];
+  const re = /^[\s\S]*?(\d+:\d+)(?=$)/gm;
+  let match, message, line, column, position;
+
+  diagnosticCollection.clear();
+
+  while ((match = re.exec(errorMessage))) {
+    // individual error message; scrub temp file path
+    message = match[0].replace(tmpfilePrefix, "/");
+    // location of problem
+    [line, column] = match[1].split(":");
+    position = [parseInt(line) - 1, parseInt(column)];
+
+    const range = new Range(
+      new Position(position[0], position[1]),
+      new Position(position[0], position[1])
+    );
+
+    problems.push({
+      message: message,
+      range,
+      severity: DiagnosticSeverity.Error,
+    });
+  }
+
+  diagnosticCollection.set(document.uri, problems);
+}
+
 export async function activate(): Promise<void> {
-  languages.registerDocumentFormattingEditProvider('cue', {
+  diagnosticCollection = languages.createDiagnosticCollection("cue-fmt");
+
+  languages.registerDocumentFormattingEditProvider("cue", {
     provideDocumentFormattingEdits,
   });
 }
+
