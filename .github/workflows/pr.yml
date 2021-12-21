@@ -6,12 +6,8 @@ on:
 
 jobs:
   build:
-    name: Lint and Test
-    strategy:
-      matrix:
-        # os: [macos-latest, ubuntu-latest, windows-latest]
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    name: Lint
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -22,7 +18,7 @@ jobs:
           node-version: 12
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install
 
       - name: Run lint task
         run: yarn lint
