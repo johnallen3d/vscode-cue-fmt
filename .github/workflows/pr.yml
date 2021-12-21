@@ -25,5 +25,4 @@ jobs:
         run: npm install
 
       - name: Run lint task
-        with:
-          run: yarn lint
+        run: yarn lint
