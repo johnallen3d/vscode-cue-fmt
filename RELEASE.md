@@ -1,7 +1,5 @@
 # Release
 
-
-
 Steps to release new version.
 
 ## Prepare and Merge Release Pull Request
@@ -15,7 +13,7 @@ Create a pull request to represent a new release.
 
 ## Trigger a Release to VS Code Marketplace
 
-After the release PR has been merged, push version tag to trigger the release action on GitHub.
+After merging the release PR, push version tag to trigger the release action on GitHub.
 
 1. Tag release commit: `git tag -m "v0.0.1" -a "v0.0.1"`
 1. Push changes: `git push --tags`
