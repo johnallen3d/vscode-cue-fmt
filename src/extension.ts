@@ -33,8 +33,11 @@ function provideDocumentFormattingEdits(document: TextDocument): TextEdit[] {
   // run `cue fmt` on temp file
   const fmt = spawnSync("cue", ["fmt", tmpfile], {});
 
+  // run `cue vet` to return errors
+  const vet = spawnSync("cue", ["vet", tmpfile], {});
+
   // refresh diagnostics/problems
-  updateDiagnostics(document, fmt.stderr.toString(), tmpfilePrefix);
+  updateDiagnostics(document, vet.stderr.toString(), tmpfilePrefix);
 
   // read formatted file
   const formatted = readFileSync(tmpfile).toString();
