@@ -6,6 +6,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+- [11](https://github.com/johnallen3d/vscode-cue-fmt/pull/11): Fix CUE Diagnostics - [@jasmineHundal](https://github.com/jasmineHundal)
+
 ## [0.1.1] - 2021-12-22
 
 - [5](https://github.com/johnallen3d/vscode-cue-fmt/pull/5): Setup GitHub actions for linting and release workflows - [@johnallen3d](https://github.com/johnallen3d)
